@@ -1,11 +1,13 @@
 package hello.core.lifecycle;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 
-public class NetworkClient implements InitializingBean, DisposableBean {
+public class NetworkClient {
 
     private String url;
 
@@ -29,14 +31,13 @@ public class NetworkClient implements InitializingBean, DisposableBean {
         System.out.println("close: " + url);
     }
 
-    @Override
-    public void destroy() throws Exception {
+    @PreDestroy
+    public void close() {
         System.out.println("종료 전 연결끊기");
         disconnect();
     }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    @PostConstruct
+    public void init(){
         System.out.println("의존관계 주입 후 초기화하기");
         connect();
         call("초기화 연결 메세지");
